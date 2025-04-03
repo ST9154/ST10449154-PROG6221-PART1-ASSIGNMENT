@@ -1,16 +1,18 @@
-name: Greetings
+name: .NET Build
 
-on: [pull_request_target, issues]
+on: [push]
 
 jobs:
-  greeting:
-    runs-on: ubuntu-latest
-    permissions:
-      issues: write
-      pull-requests: write
+  build:
+    runs-on: windows-latest  # Required for SoundPlayer
+
     steps:
-    - uses: actions/first-interaction@v1
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET 6
+      uses: actions/setup-dotnet@v3
       with:
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
-        issue-message: "Message that will be displayed on users' first issue"
-        pr-message: "Message that will be displayed on users' first pull request"
+        dotnet-version: '6.0.x'
+
+    - name: Build (Release)
+      run: dotnet build --configuration Release
